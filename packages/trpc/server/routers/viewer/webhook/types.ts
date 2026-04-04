@@ -4,7 +4,6 @@ import { z } from "zod";
 export const webhookIdAndEventTypeIdSchema = z.object({
   // Webhook ID
   id: z.string().optional(),
-  webhookId: z.string().optional(),
   eventTypeId: z.number().optional(),
   teamId: z.number().optional(),
 });

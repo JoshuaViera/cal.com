@@ -1,14 +1,13 @@
-import { LINGO_DOT_DEV_API_KEY } from "@calcom/lib/constants";
-import logger from "@calcom/lib/logger";
 import type { LocaleCode } from "@lingo.dev/_spec";
 import { LingoDotDevEngine } from "lingo.dev/sdk";
 
+import { LINGO_DOT_DEV_API_KEY } from "@calcom/lib/constants";
+import logger from "@calcom/lib/logger";
+
 export class LingoDotDevService {
-  private static engine = LINGO_DOT_DEV_API_KEY
-    ? new LingoDotDevEngine({
-        apiKey: LINGO_DOT_DEV_API_KEY,
-      })
-    : null;
+  private static engine = new LingoDotDevEngine({
+    apiKey: LINGO_DOT_DEV_API_KEY,
+  });
 
   /**
    * Localizes text from one language to another
@@ -26,13 +25,8 @@ export class LingoDotDevService {
       return null;
     }
 
-    if (!LingoDotDevService.engine) {
-      logger.warn("LingoDotDevService.localizeText() skipped: LINGO_DOT_DEV_API_KEY is not set");
-      return null;
-    }
-
     try {
-      const result = await LingoDotDevService.engine.localizeText(text, {
+      const result = await this.engine.localizeText(text, {
         sourceLocale,
         targetLocale,
       });
@@ -56,13 +50,8 @@ export class LingoDotDevService {
     sourceLocale: string,
     targetLocales: string[]
   ): Promise<string[]> {
-    if (!LingoDotDevService.engine) {
-      logger.warn("LingoDotDevService.batchLocalizeText() skipped: LINGO_DOT_DEV_API_KEY is not set");
-      return [];
-    }
-
     try {
-      const result = await LingoDotDevService.engine.batchLocalizeText(text, {
+      const result = await this.engine.batchLocalizeText(text, {
         // TODO: LocaleCode is hacky, use our locale mapping instead.
         sourceLocale: sourceLocale as LocaleCode,
         targetLocales: targetLocales as LocaleCode[],
@@ -87,13 +76,8 @@ export class LingoDotDevService {
       return texts;
     }
 
-    if (!LingoDotDevService.engine) {
-      logger.warn("LingoDotDevService.localizeTexts() skipped: LINGO_DOT_DEV_API_KEY is not set");
-      return texts;
-    }
-
     try {
-      const result = await LingoDotDevService.engine.localizeChat(
+      const result = await this.engine.localizeChat(
         texts.map((text) => ({ name: "NO_NAME", text: text.trim() })),
         {
           sourceLocale,

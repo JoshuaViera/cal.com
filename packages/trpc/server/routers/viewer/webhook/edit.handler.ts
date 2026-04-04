@@ -21,7 +21,7 @@ type EditOptions = {
 };
 
 export const editHandler = async ({ input, ctx }: EditOptions) => {
-  const { id, webhookId: _webhookId, ...data } = input;
+  const { id, ...data } = input;
 
   const webhook = await prisma.webhook.findUnique({
     where: {
